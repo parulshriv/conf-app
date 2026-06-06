@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conference Notes - Databricks AI Summit 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0f172a;
+            --bg-darker: #1e293b;
+            --bg-card: rgba(15, 23, 42, 0.5);
+            --border: #475569;
+            --border-light: rgba(71, 85, 105, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent: #fbbf24;
+            --accent-dark: #b45309;
+            --success: #4ade80;
+            --error: #ef4444;
+            --info: #60a5fa;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(to right, #fbbf24, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+        }
+
+        header .subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        header .controls {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button {
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background: var(--border);
+            border-color: var(--accent);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #fbbf24, #f97316);
+            border: none;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #f87171;
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-settings {
+            padding: 0.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .error-banner {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .error-banner.hidden {
+            display: none;
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-panel h3 {
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+        }
+
+        .settings-panel input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .settings-panel input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        }
+
+        .settings-panel p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .settings-panel a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .settings-panel a:hover {
+            text-decoration: underline;
+        }
+
+        /* Sessions List */
+        .sessions-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .session-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .session-card:hover {
+            border-color: var(--accent);
+            background: rgba(251, 191, 36, 0.05);
+        }
+
+        .session-card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .session-card p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin: 0.25rem 0;
+        }
+
+        .session-card .file-count {
+            display: inline-block;
+            background: rgba(251, 191, 36, 0.2);
+            color: var(--accent);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        /* New Session Form */
+        .new-session-form {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .new-session-form input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-darker);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .new-session-form input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        /* Session Detail */
+        .session-detail {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .session-detail h2 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .session-detail .info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            background: var(--bg-card);
+            border: 2px dashed var(--border);
+            padding: 2rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent);
+            background: rgba(251, 191, 36, 0.05);
+        }
+
+        .upload-area:active {
+            transform: scale(0.98);
+        }
+
+        .upload-area .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-area h3 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .upload-area p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        /* File List */
+        .files-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .file-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        .file-header {
+            background: rgba(30, 41, 59, 0.5);
+            border-bottom: 1px solid var(--border-light);
+            padding: 1rem;
+            display: flex;
+            gap: 0.75rem;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            word-break: break-word;
+        }
+
+        .file-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .file-content {
+            padding: 1rem;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--accent);
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .status-success {
+            color: var(--success);
+        }
+
+        .status-error {
+            color: var(--error);
+        }
+
+        .highlights-box {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--border-light);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .highlights-box h4 {
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        .highlights-box ul {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            list-position: inside;
+        }
+
+        .highlights-box li {
+            margin-bottom: 0.5rem;
+        }
+
+        details {
+            margin-bottom: 1rem;
+        }
+
+        summary {
+            padding: 0.75rem;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--border-light);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        summary:hover {
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        details[open] summary {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        details[open] > div {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--border-light);
+            border-top: none;
+            padding: 1rem;
+            border-bottom-left-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            max-height: 300px;
+            overflow-y: auto;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        /* Export Button */
+        .export-button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(to right, #fbbf24, #f97316);
+            border: none;
+            color: #000;
+            font-weight: 600;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .export-button:hover {
+            opacity: 0.9;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Desktop vs Mobile */
+        @media (min-width: 768px) {
+            .content {
+                max-width: 1200px;
+                margin: 0 auto;
+                width: 100%;
+            }
+
+            .session-detail {
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                gap: 1.5rem;
+            }
+
+            .session-detail > *:last-child {
+                grid-column: 2;
+            }
+        }
+
+        @media (max-width: 640px) {
+            header {
+                padding: 0.75rem;
+            }
+
+            header h1 {
+                font-size: 1.25rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .upload-area {
+                padding: 1.5rem;
+            }
+
+            button {
+                padding: 0.75rem 1rem;
+                font-size: 0.875rem;
+            }
+
+            .file-header {
+                flex-direction: column;
+            }
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.5);
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="controls">
+                <div>
+                    <h1>Conference Notes</h1>
+                    <p class="subtitle">DATABRICKS AI SUMMIT 2026</p>
+                </div>
+                <button class="btn-settings" onclick="toggleSettings()" title="Settings">⚙️</button>
+            </div>
+        </header>
+
+        <div id="errorBanner" class="error-banner hidden">
+            <span id="errorText"></span>
+            <button onclick="clearError()" style="background: none; border: none; color: #f87171; padding: 0; font-weight: bold;">×</button>
+        </div>
+
+        <div id="settingsPanel" class="settings-panel hidden">
+            <h3>API Configuration</h3>
+            <input type="password" id="apiKey" placeholder="sk-..." value="">
+            <p>Get your key from <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a>. Used for audio transcription.</p>
+            <button class="btn-primary" onclick="toggleSettings()">Done</button>
+        </div>
+
+        <div class="content" id="content">
+            <!-- Sessions list or detail view will be inserted here -->
+        </div>
+
+        <footer>
+            <p>Powered by OpenAI Whisper API • Data syncs automatically across devices</p>
+        </footer>
+    </div>
+
+    <script>
+        // ============ STATE MANAGEMENT ============
+        let sessions = JSON.parse(localStorage.getItem('conferenceSessions') || '[]');
+        let currentSessionId = localStorage.getItem('currentSessionId') || null;
+        let apiKey = localStorage.getItem('openaiApiKey') || '';
+        let currentView = 'list'; // 'list' or 'detail'
+
+        // Set initial API key input
+        document.getElementById('apiKey').value = apiKey;
+
+        // ============ PERSISTENCE ============
+        function saveState() {
+            localStorage.setItem('conferenceSessions', JSON.stringify(sessions));
+            localStorage.setItem('currentSessionId', currentSessionId);
+            localStorage.setItem('openaiApiKey', apiKey);
+        }
+
+        function updateApiKey() {
+            apiKey = document.getElementById('apiKey').value;
+            saveState();
+        }
+
+        document.getElementById('apiKey').addEventListener('change', updateApiKey);
+
+        // ============ UI FUNCTIONS ============
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            panel.classList.toggle('hidden');
+        }
+
+        function showError(message) {
+            const banner = document.getElementById('errorBanner');
+            const text = document.getElementById('errorText');
+            text.textContent = message;
+            banner.classList.remove('hidden');
+        }
+
+        function clearError() {
+            document.getElementById('errorBanner').classList.add('hidden');
+        }
+
+        function render() {
+            const content = document.getElementById('content');
+            if (currentView === 'list') {
+                content.innerHTML = renderSessionsList();
+            } else if (currentView === 'detail') {
+                content.innerHTML = renderSessionDetail();
+            }
+        }
+
+        // ============ VIEW: SESSIONS LIST ============
+        function renderSessionsList() {
+            let html = `
+                <button class="btn-primary" onclick="startNewSession()" style="width: 100%; margin-bottom: 1.5rem;">+ New Session</button>
+            `;
+
+            if (document.getElementById('newSessionForm')) {
+                html += `
+                    <div class="new-session-form">
+                        <input type="text" id="sessionNameInput" placeholder="Session name" autofocus>
+                        <input type="text" id="sessionSpeakerInput" placeholder="Speaker name (optional)">
+                        <div class="form-buttons">
+                            <button class="btn-primary" onclick="createSession()">Create</button>
+                            <button onclick="cancelNewSession()">Cancel</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (sessions.length === 0) {
+                html += `<div class="empty-state"><div class="empty-state-icon">📋</div><p>No sessions yet</p></div>`;
+            } else {
+                html += '<div class="sessions-list">';
+                sessions.forEach(session => {
+                    html += `
+                        <div class="session-card" onclick="openSession('${session.id}')">
+                            <h3>${escapeHtml(session.name)}</h3>
+                            <p>${escapeHtml(session.speaker)}</p>
+                            <p>${session.createdAt}</p>
+                            <span class="file-count">${session.files.length} files</span>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+
+            return html;
+        }
+
+        function startNewSession() {
+            const form = document.getElementById('newSessionForm');
+            if (!form) {
+                const marker = document.createElement('div');
+                marker.id = 'newSessionForm';
+                document.getElementById('content').appendChild(marker);
+                render();
+                setTimeout(() => document.getElementById('sessionNameInput').focus(), 0);
+            }
+        }
+
+        function cancelNewSession() {
+            const form = document.getElementById('newSessionForm');
+            if (form) form.remove();
+            render();
+        }
+
+        function createSession() {
+            const name = document.getElementById('sessionNameInput').value.trim();
+            const speaker = document.getElementById('sessionSpeakerInput').value.trim() || 'Unknown Speaker';
+
+            if (!name) {
+                showError('Please enter a session name');
+                return;
+            }
+
+            const session = {
+                id: Date.now().toString(),
+                name: name,
+                speaker: speaker,
+                createdAt: new Date().toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                files: []
+            };
+
+            sessions.push(session);
+            currentSessionId = session.id;
+            currentView = 'detail';
+            saveState();
+            render();
+        }
+
+        function openSession(sessionId) {
+            currentSessionId = sessionId;
+            currentView = 'detail';
+            saveState();
+            render();
+        }
+
+        function backToList() {
+            currentView = 'list';
+            render();
+        }
+
+        // ============ VIEW: SESSION DETAIL ============
+        function renderSessionDetail() {
+            const session = sessions.find(s => s.id === currentSessionId);
+            if (!session) {
+                currentView = 'list';
+                render();
+                return '';
+            }
+
+            let html = `
+                <button onclick="backToList()" style="margin-bottom: 1rem;">← Back</button>
+                <div class="session-detail">
+                    <div>
+                        <h2>${escapeHtml(session.name)}</h2>
+                        <div class="info">
+                            <p><strong>Speaker:</strong> ${escapeHtml(session.speaker)}</p>
+                            <p><strong>Created:</strong> ${session.createdAt}</p>
+                        </div>
+                    </div>
+                    <button class="btn-danger" onclick="deleteSession('${session.id}')" style="width: 100%; align-self: start;">Delete Session</button>
+                </div>
+
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <div class="icon">📤</div>
+                    <h3>Add Files</h3>
+                    <p>Audio files or photos</p>
+                    <input type="file" id="fileInput" multiple accept="audio/*,image/*">
+                </div>
+            `;
+
+            if (session.files.length > 0) {
+                html += `<h3 style="margin: 1.5rem 0 1rem 0; color: var(--text-muted); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 1px;">${session.files.length} Item${session.files.length !== 1 ? 's' : ''}</h3>`;
+                html += '<div class="files-list">';
+                session.files.forEach(file => {
+                    html += renderFileItem(file);
+                });
+                html += '</div>';
+
+                if (session.files.some(f => f.transcript || f.highlights)) {
+                    html += `<button class="export-button" onclick="exportSession('${session.id}')">📥 Export Notes</button>`;
+                }
+            }
+
+            document.getElementById('fileInput')?.addEventListener('change', handleFileUpload);
+            return html;
+        }
+
+        function renderFileItem(file) {
+            let html = `
+                <div class="file-item">
+                    <div class="file-header">
+                        <div class="file-info">
+                            <div class="file-name">${escapeHtml(file.name)}</div>
+                            <div class="file-meta">
+                                <span>${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                                <span>${file.uploadedAt}</span>
+                            </div>
+                        </div>
+                        <button class="btn-danger" onclick="deleteFile('${file.id}')" style="width: auto;">🗑️</button>
+                    </div>
+                    <div class="file-content">
+            `;
+
+            // Status
+            if (file.processing) {
+                html += `<div class="status"><span class="status-spinner"></span><span>Processing...</span></div>`;
+            } else if (file.error) {
+                html += `<div class="status status-error">❌ ${escapeHtml(file.error)}</div>`;
+            } else if (file.transcript) {
+                html += `<div class="status status-success">✓ Complete</div>`;
+            }
+
+            // Highlights
+            if (file.highlights) {
+                const highlights = file.highlights.split('\n').filter(h => h.trim());
+                html += `
+                    <div class="highlights-box">
+                        <h4>Key Highlights</h4>
+                        <ul>
+                            ${highlights.map(h => `<li>${escapeHtml(h.replace('• ', ''))}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            // Transcript
+            if (file.transcript) {
+                html += `
+                    <details>
+                        <summary>📄 Full Transcript (${file.transcript.split(' ').length} words)</summary>
+                        <div>${escapeHtml(file.transcript)}</div>
+                    </details>
+                `;
+            }
+
+            // Image preview
+            if (file.type.startsWith('image/')) {
+                html += `<img src="${file.dataUrl}" class="image-preview" alt="${escapeHtml(file.name)}">`;
+            }
+
+            html += `</div></div>`;
+            return html;
+        }
+
+        // ============ FILE HANDLING ============
+        function handleFileUpload(e) {
+            if (!currentSessionId) {
+                showError('Please create a session first');
+                return;
+            }
+
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                if (file.type.startsWith('audio/')) {
+                    if (!apiKey) {
+                        showError('Please set your OpenAI API key in settings');
+                        return;
+                    }
+                }
+                processFile(file);
+            });
+
+            e.target.value = '';
+        }
+
+        function processFile(file) {
+            const fileId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            const session = sessions.find(s => s.id === currentSessionId);
+
+            const fileObj = {
+                id: fileId,
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                uploadedAt: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+                transcript: null,
+                highlights: null,
+                processing: false,
+                error: null,
+                dataUrl: null
+            };
+
+            // Store image as data URL
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    fileObj.dataUrl = e.target.result;
+                    render();
+                };
+                reader.readAsDataURL(file);
+            }
+
+            session.files.push(fileObj);
+            saveState();
+            render();
+
+            // Transcribe audio
+            if (file.type.startsWith('audio/')) {
+                transcribeAudio(fileId, file);
+            }
+        }
+
+        async function transcribeAudio(fileId, file) {
+            const session = sessions.find(s => s.id === currentSessionId);
+            const fileObj = session.files.find(f => f.id === fileId);
+
+            fileObj.processing = true;
+            render();
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('model', 'whisper-1');
+                formData.append('language', 'en');
+
+                const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error?.message || 'Transcription failed');
+                }
+
+                const data = await response.json();
+                fileObj.transcript = data.text;
+                fileObj.highlights = generateHighlights(data.text);
+            } catch (error) {
+                fileObj.error = error.message;
+                showError(`Transcription error: ${error.message}`);
+            } finally {
+                fileObj.processing = false;
+                saveState();
+                render();
+            }
+        }
+
+        function generateHighlights(transcript) {
+            const sentences = transcript.match(/[^.!?]+[.!?]+/g) || [];
+            const keywords = ['important', 'critical', 'key', 'breakthrough', 'new', 'improve', 'increase',
+                            'reduce', 'solve', 'solution', 'innovation', 'discovery', 'significant',
+                            'major', 'unique', 'powerful', 'essential', 'must', 'should', 'recommend',
+                            'best practice', 'lesson', 'insight', 'advantage', 'benefit'];
+
+            const scored = sentences.map((sent, idx) => {
+                const trimmed = sent.trim();
+                let score = 0;
+
+                keywords.forEach(keyword => {
+                    if (trimmed.toLowerCase().includes(keyword)) score += 2;
+                });
+
+                if (trimmed.split(' ').length > 10 && trimmed.split(' ').length < 50) score += 1;
+                if (idx < sentences.length * 0.3) score += 0.5;
+
+                return { sentence: trimmed, score, index: idx };
+            });
+
+            const topHighlights = scored
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 5)
+                .sort((a, b) => a.index - b.index)
+                .map(item => '• ' + item.sentence.trim());
+
+            return topHighlights.join('\n');
+        }
+
+        function deleteFile(fileId) {
+            const session = sessions.find(s => s.id === currentSessionId);
+            session.files = session.files.filter(f => f.id !== fileId);
+            saveState();
+            render();
+        }
+
+        function deleteSession(sessionId) {
+            if (confirm('Delete this session?')) {
+                sessions = sessions.filter(s => s.id !== sessionId);
+                currentSessionId = null;
+                currentView = 'list';
+                saveState();
+                render();
+            }
+        }
+
+        function exportSession(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session) return;
+
+            let markdown = `# ${session.name}\n\n`;
+            markdown += `**Speaker:** ${session.speaker}\n`;
+            markdown += `**Date:** ${session.createdAt}\n\n`;
+            markdown += `---\n\n`;
+
+            session.files.forEach((file, idx) => {
+                markdown += `## ${idx + 1}. ${file.name}\n`;
+                markdown += `_Uploaded: ${file.uploadedAt}_\n\n`;
+
+                if (file.highlights) {
+                    markdown += `### Key Highlights\n${file.highlights}\n\n`;
+                }
+
+                if (file.transcript) {
+                    markdown += `### Full Transcript\n${file.transcript}\n\n`;
+                }
+
+                markdown += `---\n\n`;
+            });
+
+            const blob = new Blob([markdown], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${session.name.replace(/\s+/g, '-').toLowerCase()}-notes.md`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // ============ UTILITIES ============
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ============ INITIALIZATION ============
+        render();
+    </script>
+</body>
+</html>
